@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="author" content="" />
+	<meta name="description" content="" />
+	<link rel="stylesheet" href="./src/style.css" />
+	<link rel="stylesheet" href="./src/iconfont/iconfont.css" />
+	<style type="text/css">
+		h1{font-size: 14px;}
+	</style>
+</head>
+<body>
+
+	<div class="demo" id="demo">
+		<h1>checkbox</h1>
+		<div>
+			<div class="checkbox-inline">
+				<input type="checkbox" value="0" class="checkbox" name="2" /> checkbonx
+			</div>
+			<div class="checkbox-inline">
+				<input type="checkbox" value="0" class="checkbox" name="2" checked/> checkbonx选中
+			</div>
+			<div class="checkbox-inline">
+				<input type="checkbox" value="1" class="checkbox" name="2" readonly /> checkbonx只读
+			</div>
+			<div class="checkbox-inline">
+				<input type="checkbox" value="2" class="checkbox" name="2" disabled /> checkbonx禁用
+			</div>
+		</div>
+
+		<hr>
+
+		<h1>radio</h1>
+		<div>
+			<div class="radio-inline">
+				<input type="radio" value="0" class="radio" name="1" /> radio
+			</div>
+			<div class="radio-inline">
+				<input type="radio" value="0" class="radio" name="1" checked/> radio选中
+			</div>
+			<div class="radio-inline">
+				<input type="radio" value="1" class="radio" name="1" readonly/> radio只读
+			</div>
+			<div class="radio-inline">
+				<input type="radio" value="2" class="radio" name="1" disabled/> radio禁用
+			</div>
+		</div>
+
+		<hr>
+
+		<h1>select</h1>
+		<div class="dropdown">
+			<div class="input-group">
+				<input type="text" id="" readonly class="form-control"  placeholder="" />
+				<span class="input-group-addon" role="select" ><i class="iconfont icon-unfold"></i></span>
+			</div>
+			<input type="hidden" name="3" />
+			<ul class="ul-dropdown">
+				<li class="selected"><a href="javascript:" data-val="0" >全部</a></li>
+				<li><a href="javascript:" data-val="1" >selected1</a></li>
+				<li><a href="javascript:" data-val="2" >selected2</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- seajs -->
+	<script src="./src/lib/seajs/sea.js" id="seajsnode"></script>
+	<script type="text/javascript">
+		seajs.config({
+	        debug: true,
+	        //map: [
+	        //    ['.js', '.js?' + G.nowTime]
+	        //],
+	        base: './',
+	        alias: {
+	            'jquery': 'src/lib/jquery/jquery-debug',
+	            'underscore': 'src/lib/underscore/underscore',
+	            'backbone': 'src/lib/backbone/backbone'
+	        }
+	    });
+	</script>
+	<script type="text/javascript">
+		seajs.use('demo', function(mod){
+			mod.run();
+		});
+	</script>
+</body>
+</html>

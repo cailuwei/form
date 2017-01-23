@@ -1,0 +1,37 @@
+
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1485160595332'); /* IE9*/
+  src: url('iconfont.eot?t=1485160595332#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1485160595332') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1485160595332') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1485160595332#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-roundcheckfill:before { content: "\e617"; }
+
+.icon-roundcheck:before { content: "\e618"; }
+
+.icon-round:before { content: "\e619"; }
+
+.icon-squarecheckfill:before { content: "\e61c"; }
+
+.icon-squarecheck:before { content: "\e61d"; }
+
+.icon-square:before { content: "\e61e"; }
+
+.icon-fold:before { content: "\e620"; }
+
+.icon-left:before { content: "\e621"; }
+
+.icon-right:before { content: "\e622"; }
+
+.icon-unfold:before { content: "\e623"; }
+
