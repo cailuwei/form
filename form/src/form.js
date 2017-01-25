@@ -213,9 +213,9 @@ define(function(require, exports, module){
 				if(options.data){
 					this.setData(new Backbone.Collection(options.data));
 				}
-				
-				this.addCurrentClass();
 			}
+
+			this.addCurrentClass();
 
 		},
 		cacheEls: function(){
