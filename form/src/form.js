@@ -7,6 +7,16 @@ define(function(require, exports, module){
 	var $ = require('jquery'),
 	    _ = require('underscore'),
 	    Backbone = require('backbone');
+
+	var templateOptions = {
+            evaluate: /<#([\s\S]+?)#>/g,
+            interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+            escape: /\{\{([^\}]+?)\}\}(?!\})/g
+        },
+        emptyRender = _.template(''),
+        template = function(html) {
+	        return _.isString(html) ? _.template(html, templateOptions) : emptyRender;
+	    }; 
 	
 	/**
 	 * 模拟checkbox 
@@ -142,7 +152,7 @@ define(function(require, exports, module){
 	/**
 	 * 模拟select SelectCollection
 	 */
-	var li = '<li class="selected"><a href="javascript:" data-val="{{val}}" >{{name}}</a></li>',
+	var li = '<li><a href="javascript:" data-val="{{val}}" >{{name}}</a></li>',
 		text = {val: 1, name: 'text1'};
 		
 	var SelectCollection = Backbone.Collection.extend({
@@ -152,11 +162,6 @@ define(function(require, exports, module){
 			if(options.url){
 				this.url = options.url;
 			}
-            
-            if(options.sync){
-				this.update();
-			}
-            
 			this.extractResult = options.extractResult || function (res) {
 				return res;
 			};
@@ -170,9 +175,9 @@ define(function(require, exports, module){
 	/**
 	 * 模拟select
 	 * <div class="dropdown">
-	 * 	<div class="input-group">
+	 * 	<div>
 	 *    <input type="text" id="" readonly class="form-control"  placeholder="" />
-	 *    <span class="input-group-addon" role="select" ><i class="iconfont icon-unfold"></i></span>
+	 *    <span class="input-group-addon" role="select" ><i class="fa fa-angle-down"></i></span>
 	 *  </div>
 	 *  <input type="hidden" id="" name="" />
 	 *  <ul class="ul-dropdown"></ul>
@@ -190,22 +195,27 @@ define(function(require, exports, module){
 			'click input[type=text]': 'hideSelect'
 		},
 		initialize: function(options){
+			this.cacheEls();
+			this.template = template(options.template || li);
 
 			if(options.store){
 				this.store = new SelectCollection(null, options.store);
 
 //				this.listenTo(this.store, 'add', this.renderUl);
+				this.listenTo(this.store, 'sync', this.setData);
 				this.listenTo(this.store, 'reset', this.setData);
 				this.listenTo(this.store, 'error', this.error);
-//				this.listenTo(this.store, 'sync', this.sync);
+				
+				if(options.sync){
+					this.update();
+				}
+			}else{
+				if(options.data){
+					this.setData(new Backbone.Collection(options.data));
+				}
+				
+				this.addCurrentClass();
 			}
-			
-			if(options.data){
-				this.setData(options.data);
-			}
-			
-			this.cacheEls();
-			this.render();
 
 		},
 		cacheEls: function(){
@@ -215,15 +225,35 @@ define(function(require, exports, module){
 			this.$addon = this.$('.input-group-addon');
 			this.$i = this.$addon.children();
 		},
-		renderUl: function(model){			
-			var tmpl = template(li);
-			this.$ul.append(tmpl(model.toJSON()));
-		},
-		render: function(){
-			var $selected = this.$('li.selected>a');
-			
+		addCurrentClass: function(){
+			if(this.$('li.selected').length < 1){
+				this.$('li').eq(0).addClass('selected');
+			}
+			var $selected = this.$('li.selected>a');	
 			this.$text.val($selected.html());
 			this.$val.val($selected.data('val'));
+		},
+		toggleCurrentClass: function(type){
+			if(type === 'slidedown'){
+				this.$i.removeClass('icon-unfold').addClass('icon-fold');	
+			}else{
+				this.$i.removeClass('icon-fold').addClass('icon-unfold');
+			}
+		},
+		error: function(col, rsp, opt){
+			alert('发生错误，请稍后再试');
+		},
+		setData: function(collection, opt){
+			var _this = this;
+			this.$ul.empty();
+			collection.map(function(item, index, list){
+				_this.render(item);
+			});
+		},
+		render: function(model){
+			this.$ul.append(this.template(model.toJSON()));
+			this.addCurrentClass();
+			return this;
 		},
 		'select': function(ev){
 			var $this = $(ev.currentTarget),
@@ -253,27 +283,10 @@ define(function(require, exports, module){
 			this.$ul.slideUp();
 			this.toggleCurrentClass('slideup');
 		},
-		toggleCurrentClass: function(type){
-			if(type === 'slidedown'){
-				this.$i.removeClass('icon-unfold').addClass('icon-fold');	
-			}else{
-				this.$i.removeClass('icon-fold').addClass('icon-unfold');
-			}
-		},
-		error: function(col, rsp, opt){
-			console.log('发生错误，请稍后再试');
-		},
-		_set: function(data){
+		update: function(data){
 			this.store.fetch({
 				data: data,
 				reset: true
-			});
-		},
-		setData: function(collection, opt){
-			var _this = this;
-			this.$ul.empty();
-			collection.map(function(item, index, list){
-				_this.renderUl(item);
 			});
 		}
 	});
